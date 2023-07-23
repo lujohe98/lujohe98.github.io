@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plain Bubble Chart</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 12px;
+    }
+    .bubble-wrapper{
+      display: flex;
+      justify-content: center;
+      width: 95%;
+      margin: auto;
+      border-radius: 5px;
+      gap: 20px;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      background-color: #edf7ed;
+    }
+    .col{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 100%;
+    }
+    .row-item{
+      width: 100%;
+      min-height: 150px;
+      height: fit-content;
+      border: 1px solid black;
+    }
+    .row-header, .col-header{
+      text-align: center;
+      white-space: nowrap;
+    }
+    .bubble-item{
+      border-radius: 50%;
+      background-color: #A6BE9E;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: fit;
+    }
+    .row-item{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .fragen{
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: left;
+      gap: 10px;
+      margin: auto;
+      width: 95%;
+    }
+    .prozesse{
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: left;
+      gap: 3px;
+      margin: 5px;
+    }
+    .prozesse table{
+      background-color: #edf7ed;
+      padding: 0px;
+      border-radius: 5px;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      width: 95%;
+      margin: auto;
+    }
+    .prozesse td{
+      text-align: center;
+      padding: 2px;
+    }
+    .prozesse tr{
+      padding: 20px;
+    }
+    .fragen select, input{
+      max-width: 100px;
+    }
+    .frage{
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background-color: #edf7ed;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    }
+    .active{
+      background-color: yellow;
+    }
+    .header-col{
+      margin: 20px auto;
+      width: 95%;
+    }
+    .header-col input,label{
+      width: fit-content;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      border: none;
+      border-radius: 5px;
+      background-color: #035f72;
+      padding: 3px;
+      color: #ffffff;
+    }
+    .row-container{
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+      align-items: center;
+    }
+    #frage0{
+      min-width: 350px;
+    }
+    .del-button{
+      padding: 2px;
+    }
+    .taeglich{
+      width: 40px;
+      height: 40px;
+    }
+    .woechentlich{
+      width: 30px;
+      height: 30px;
+    }
+    .monatlich{
+      width: 20px;
+      height: 20px;
+    }
+    .jaehrlich{
+      width: 10px;
+      height: 10px;
+    }
+    @media only screen and (max-width: 600px) {
+      .taeglich{
+      width: 20px;
+      height: 20px;
+    }
+    .woechentlich{
+      width: 15px;
+      height: 15px;
+    }
+    .monatlich{
+      width: 10px;
+      height: 10px;
+    }
+    .jaehrlich{
+      width: 5px;
+      height: 5px;
+    }
+    .bubble-item{
+      font-size: 5px;
+    }
+    }
+  </style>
+
+</head>
+<body>
+  <div class="fragen">
+    <div class="frage">
+      <div>Wie lässt sich der Prozess beschreiben?</div>
+      <input type="text" id="frage0">
+    </div>
+    <div class="frage">
+    <div>Wie gut lässt sich der Prozessschritt mit Flowshare dokumentieren?</div>
+    <select name="frage1" id="frage1">
+      <option value="nicht">nicht</option>
+      <option value="leicht">leicht</option>
+      <option value="schwer">schwer</option>
+    </select>
+  </div>
+  <div class="frage">
+    <div>Wie gut lässt sich der Prozessschritt von Hand (ohne Flowshare) dokumentieren?</div>
+    <select name="frage2" id="frage2">
+      <option value="nicht">nicht</option>
+      <option value="leicht">leicht</option>
+      <option value="schwer">schwer</option>
+    </select>
+  </div>
+  <div class="frage">
+    <div>Existieren Arbeitsschritte, die nicht am PC stattfinden?</div>
+    <select name="frage3" id="frage3">
+      <option value="ja-w">ja, wenige</option>
+      <option value="ja-v">ja, viele</option>
+      <option value="nein">nein</option>
+    </select>
+  </div>
+  <div class="frage">
+    <div>Wie häufig wird dieser Prozessschritt ungefähr durchgeführt?</div>
+    <select name="frage4" id="frage4">
+      <option value="1">jährlich</option>
+      <option value="2">monatlich</option>
+      <option value="3">wöchentlich</option>
+      <option value="4">täglich</option>
+    </select>
+  </div>
+  <div class="frage">
+    <div>Welche Auswirkungen auf den Geschäftsprozess hat es, wenn der Prozessschritt kurzfristig (unter einer Woche) nicht ausgeführt werden kann?</div>
+    <select name="frage5" id="frage5">
+      <option value="keine">keine</option>
+      <option value="geringe">geringe</option>
+      <option value="mittelmäßige">mittelmäßige</option>
+      <option value="starke">starke</option>
+    </select>
+  </div>
+  <div class="frage">
+    <div>Welche Auswirkungen auf den Geschäftsprozess hat es, wenn der Prozessschritt langfristig (über eine Woche) nicht ausgeführt werden kann?</div>
+    <select name="frage6" id="frage6">
+      <option value="keine">keine</option>
+      <option value="geringe">geringe</option>
+      <option value="mittelmäßige">mittelmäßige</option>
+      <option value="starke">starke</option>
+    </select>
+  </div>
+  <div class="frage">
+    <div>Wie viele Mitarbeiter*innen sind derzeit in der Lage diesen Prozessschritt ausführen?</div>
+    <input type="number" id="frage7">
+  </div>
+    <input type="submit" value="Visualisieren" class="submit-button">
+  </div>
+  <div class="header-col">
+    <input type="file" id="fileInput" accept=".json" value="import" style="display: none;"/>
+    <label for="fileInput"><span style="color: #ffffff;">Import</span></label>
+    <input type="submit" value="Export" id="fileExport" style="display: none;"/>
+    <label for="fileExport"><span style="color: #ffffff;">Export</span></label>
+    <div class="bubble-item" style="display: none;">0</div>
+  </div>
+<div class="prozesse">
+    <table class="prozess-table" cellspacing="0">
+      <tr>
+        <th>Nr.</th>
+        <th><nobr>Beschreibung</nobr></th>
+        <th><nobr>Dokumentierbarkeit</nobr></th>
+        <th><nobr>kurzfr. Auswirkung</nobr></th>
+        <th><nobr>langfr. Auswirkung</nobr></th>
+        <th><nobr>Häufigkeit</nobr></th>
+        <th>Anzahl <nobr>Mitarbeiter*innen</nobr>, die <nobr>Prozessschritt</nobr> <nobr>ausführen</nobr> können</th>
+        <th></th>
+      </tr>
+    </table>
+  </div>
+<div class="bubble-wrapper">
+    <div class="col">
+      <div class="row-header">
+        leicht <nobr>dokumentierbar</nobr>
+      </div>
+      <div class="row-header">
+        schwer <nobr>dokumentierbar</nobr>
+      </div>
+      <div class="row-header">
+        nicht <nobr>dokumentierbar</nobr>
+      </div>
+    </div>
+    <div class="col keine">
+      <div class="row-item">
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+      </div>
+      <div class="row-item">
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+      </div>
+      <div class="row-item">
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+      </div>
+      <div class="col-header">
+        keine Auswirkung
+      </div>
+    </div>
+    <div class="col geringe">
+      <div class="row-item">
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+      </div>
+      <div class="row-item">
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+      </div>
+      <div class="row-item">
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+      </div>
+      
+      <div class="col-header">
+        geringe Auswirkung
+      </div>
+    </div>
+    <div class="col mittel">
+      <div class="row-item">
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+      </div>
+      <div class="row-item">
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+      </div>
+      <div class="row-item">
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+      </div>
+      
+      <div class="col-header">
+        mittelmäßige Auswirkung
+      </div>
+    </div>
+    <div class="col starke">
+      <div class="row-item">
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+      </div>
+      <div class="row-item">
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+      </div>
+      <div class="row-item">
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+        <div class="row-container"></div>
+      </div>
+      
+      <div class="col-header">
+        starke Auswirkung
+      </div>
+    </div>
+  </div>
+  </body>
+<script>
+  const FACTOR_jährlich = 10;
+  const FACTOR_monatlich = 20;
+  const FACTOR_wöchentlich = 30;
+  const FACTOR_täglich = 40;
+  document.querySelector('.submit-button').addEventListener('click', () => {
+    let frage0 = document.querySelector('#frage0').value;
+    let frage1 = document.querySelector('#frage1').value;
+    let frage2 = document.querySelector('#frage2').value;
+    let frage3 = document.querySelector('#frage3').value;
+    let frage4 = document.querySelector('#frage4').value;
+    let frage5 = document.querySelector('#frage5').value;
+    let frage6 = document.querySelector('#frage6').value;
+    let frage7 = document.querySelector('#frage7').value;
+    let bubbleItem = document.createElement('div');
+    bubbleItem.classList.add('bubble-item');
+    let col;
+    let row;
+    if(frage6 == 'keine'){
+      col = document.querySelector('.keine');
+    }
+    else if(frage6 == 'geringe'){
+      col = document.querySelector('.geringe');
+    }
+    else if(frage6 == 'mittelmäßige'){
+      col = document.querySelector('.mittel');
+    }
+    else if(frage6 == 'starke'){
+      col = document.querySelector('.starke');
+    }
+    if(frage1 == 'nicht'){
+      row = 2;
+    }
+    else if(frage1 == 'leicht'){
+      row = 0;
+    }
+    else if(frage1 == 'schwer'){
+      row = 1;
+    }
+    let factor;
+    let classFactor;
+    let prozessTable = document.querySelector('.prozess-table');
+    if(frage4 == "1"){
+      frage4 = "jährlich";
+      factor = FACTOR_jährlich;
+      classFactor = 'jaehrlich';
+    }
+    else if(frage4 == "2"){
+      frage4 = "monatlich";
+      factor = FACTOR_monatlich;
+      classFactor = 'monatlich';
+    }
+    else if(frage4 == "3"){
+      frage4 = "wöchentlich";
+      factor = FACTOR_wöchentlich;
+      classFactor = 'woechentlich';
+    }
+    else if(frage4 == "4"){
+      frage4 = "täglich";
+      factor = FACTOR_täglich;
+      classFactor = 'taeglich';
+    }
+    //let index = prozessTable.children.length;
+    let index = parseInt(document.querySelectorAll('.bubble-item')[document.querySelectorAll('.bubble-item').length - 1].innerHTML) + 1;
+    let tmp = [];
+    document.querySelectorAll('.bubble-item').forEach(element => {
+      tmp.push(element.innerHTML);
+    });
+    index = Math.max(...tmp) + 1;
+
+    //bubbleItem.style = "width: " + factor + "px; height: " + factor + "px;";
+    bubbleItem.classList.add(classFactor);
+    bubbleItem.innerHTML = index;
+    bubbleItem.id = index;
+    bubbleItem.onmouseenter = () => {
+      let activeProzess = document.querySelector('#row' + index);
+      activeProzess.className += ' active';
+    }
+    bubbleItem.onmouseleave = () => {
+      let activeProzess = document.querySelector('#row' + index);
+      activeProzess.className = activeProzess.className.replace(' active', '');
+    }
+    let count = col.children[row].querySelectorAll('.row-container')[0].childElementCount;
+    let count2 = col.children[row].querySelectorAll('.row-container')[1].childElementCount;
+    let count3 = col.children[row].querySelectorAll('.row-container')[2].childElementCount;
+    let count4 = col.children[row].querySelectorAll('.row-container')[3].childElementCount;
+    let count5 = col.children[row].querySelectorAll('.row-container')[4].childElementCount;
+    let count6 = col.children[row].querySelectorAll('.row-container')[5].childElementCount;
+    
+    //document.querySelector('.bubble-wrapper').scrollIntoView();
+    if(count < 4){
+      col.children[row].querySelectorAll('.row-container')[0].appendChild(bubbleItem);
+    }
+    else if(count2 < 4){
+      col.children[row].querySelectorAll('.row-container')[1].appendChild(bubbleItem);
+    }
+    else if(count3 < 4){
+      col.children[row].querySelectorAll('.row-container')[2].appendChild(bubbleItem);
+    }
+    else if(count4 < 4){
+      col.children[row].querySelectorAll('.row-container')[3].appendChild(bubbleItem);
+    }
+    else if(count5 < 4){
+      col.children[row].querySelectorAll('.row-container')[4].appendChild(bubbleItem);
+    }
+    else if(count6 < 4){
+      col.children[row].querySelectorAll('.row-container')[5].appendChild(bubbleItem);
+    }
+    
+    else{
+      return;
+    }
+
+    let rowItem = document.createElement('tr');
+    let rowData = document.createElement('td');
+    rowData.innerHTML = index;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    rowData.innerHTML = frage0;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    rowData.innerHTML = frage1;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    rowData.innerHTML = frage5;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    rowData.innerHTML = frage6;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    rowData.innerHTML = frage4;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    rowData.innerHTML = frage7;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    let delButton = document.createElement("button");
+    delButton.classList.add('del-button');
+    delButton.addEventListener("click", () => {
+      let row = delButton.parentNode.parentNode.rowIndex;
+      let id = String(delButton.parentNode.parentNode.id).slice(3);
+      prozessTable.deleteRow(row);
+      document.getElementById(id).remove();
+    });
+    delButton.innerHTML = 'X';
+    rowData.appendChild(delButton);
+    rowItem.appendChild(rowData);
+    rowItem.id = "row" + index;
+    prozessTable.appendChild(rowItem);
+
+  });  
+
+  document.getElementById('fileInput').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const fileContent = e.target.result;
+    const jsonData = JSON.parse(fileContent);
+
+    Object.entries(jsonData).forEach(([key, value]) => {
+    let col;
+    let row;
+    if(value.lAuswirkung == 'keine'){
+      col = document.querySelector('.keine');
+    }
+    else if(value.lAuswirkung == 'geringe'){
+      col = document.querySelector('.geringe');
+    }
+    else if(value.lAuswirkung == 'mittelmäßige'){
+      col = document.querySelector('.mittel');
+    }
+    else if(value.lAuswirkung == 'starke'){
+      col = document.querySelector('.starke');
+    }
+    if(value.dokumentierbarkeit == 'nicht'){
+      row = 2;
+    }
+    else if(value.dokumentierbarkeit == 'leicht'){
+      row = 0;
+    }
+    else if(value.dokumentierbarkeit == 'schwer'){
+      row = 1;
+    }
+    let factor;
+    let classFactor;
+    if(value.häufigkeit == 'jährlich'){
+      factor = FACTOR_jährlich
+      classFactor = 'jaehrlich';
+    }
+    else if(value.häufigkeit == 'monatlich'){
+      factor = FACTOR_monatlich
+      classFactor = 'monatlich';
+    }
+    else if(value.häufigkeit == 'wöchentlich'){
+      factor = FACTOR_wöchentlich
+      classFactor = 'woechentlich';
+    }
+    else if(value.häufigkeit == 'täglich'){
+      factor = FACTOR_täglich
+      classFactor = 'taeglich';
+    }
+    let bubbleItem = document.createElement('div');
+    bubbleItem.classList.add('bubble-item');
+    let prozessTable = document.querySelector('.prozess-table');
+
+    let index = parseInt(document.querySelectorAll('.bubble-item')[document.querySelectorAll('.bubble-item').length - 1].innerHTML) + 1;
+    let tmp = [];
+    document.querySelectorAll('.bubble-item').forEach(element => {
+      tmp.push(element.innerHTML);
+    });
+    index = Math.max(...tmp) + 1;
+    
+    //bubbleItem.style = "width: " + factor + "px; height: " + factor + "px;";
+    bubbleItem.classList.add(classFactor);
+    bubbleItem.innerHTML = index;
+    bubbleItem.id = index;
+    //document.querySelector('.bubble-wrapper').scrollIntoView();
+    bubbleItem.onmouseenter = () => {
+      let activeProzess = document.querySelector('#row' + index);
+      activeProzess.className += ' active';
+    }
+    bubbleItem.onmouseleave = () => {
+      let activeProzess = document.querySelector('#row' + index);
+      activeProzess.className = activeProzess.className.replace(' active', '');
+    }
+
+    let count = col.children[row].querySelectorAll('.row-container')[0].childElementCount;
+    let count2 = col.children[row].querySelectorAll('.row-container')[1].childElementCount;
+    let count3 = col.children[row].querySelectorAll('.row-container')[2].childElementCount;
+    //document.querySelector('.bubble-wrapper').scrollIntoView();
+    if(count < 4){
+      col.children[row].querySelectorAll('.row-container')[0].appendChild(bubbleItem);
+    }
+    if(count2 < 4){
+      col.children[row].querySelectorAll('.row-container')[1].appendChild(bubbleItem);
+    }
+    if(count3 < 4){
+      col.children[row].querySelectorAll('.row-container')[2].appendChild(bubbleItem);
+    }
+    else{
+      return;
+    }
+    if(value.häufigkeit == "1"){
+      value.häufigkeit = "jährlich";
+    }
+    else if(value.häufigkeit == "2"){
+      value.häufigkeit = "monatlich";
+    }
+    else if(value.häufigkeit == "3"){
+      value.häufigkeit = "wöchentlich";
+    }
+    else if(value.häufigkeit == "4"){
+      value.häufigkeit = "täglich";
+    }
+
+    let rowItem = document.createElement('tr');
+    let rowData = document.createElement('td');
+    rowData.innerHTML = index;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    rowData.innerHTML = value.beschreibung;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    rowData.innerHTML = value.dokumentierbarkeit;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    rowData.innerHTML = value.kAuswirkung;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    rowData.innerHTML = value.lAuswirkung;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    rowData.innerHTML = value.häufigkeit;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    rowData.innerHTML = value.anzMitarbeiter;
+    rowItem.appendChild(rowData);
+    rowData = document.createElement('td');
+    let delButton = document.createElement("button");
+    delButton.addEventListener("click", () => {
+      let row = delButton.parentNode.parentNode.rowIndex;
+      let id = String(delButton.parentNode.parentNode.id).slice(3);
+      prozessTable.deleteRow(row);
+      document.getElementById(id).remove();
+
+    });
+    delButton.classList.add('del-button');
+    delButton.innerHTML = 'X';
+    rowData.appendChild(delButton);
+    rowItem.appendChild(rowData);
+    rowItem.id = "row" + index;
+    prozessTable.appendChild(rowItem);
+    
+    });
+  };
+
+  reader.readAsText(file);
+});
+
+document.getElementById("fileExport").addEventListener("click", () => {
+  let table = document.querySelector('.prozess-table');
+  let index = 1;
+  let pName;
+  let newObject;
+  let finalData = {};
+  for (let i = 1; i < table.rows.length; i++) {
+  const row = table.rows[i];
+  pName = "p" + index;
+  newObject = {         "nr": row.cells[0].innerHTML,
+                        "beschreibung": row.cells[1].innerHTML,
+                        "dokumentierbarkeit": row.cells[2].innerHTML,
+                        "kAuswirkung": row.cells[3].innerHTML,
+                        "lAuswirkung": row.cells[4].innerHTML,
+                        "häufigkeit": row.cells[5].innerHTML,
+                        "anzMitarbeiter": row.cells[6].innerHTML};
+  finalData[pName] = newObject;
+  index++;
+   
+}
+const jsonData = JSON.stringify(finalData, null, table.rows.length - 1);
+
+const blob = new Blob([jsonData], { type: "application/json" });
+
+
+const downloadLink = document.createElement("a");
+downloadLink.href = URL.createObjectURL(blob);
+downloadLink.download = "data.json";
+downloadLink.style.display = "none";
+
+document.body.appendChild(downloadLink);
+
+downloadLink.click();
+
+document.body.removeChild(downloadLink);
+});
+
+</script>
+</html>
